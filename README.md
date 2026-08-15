@@ -23,11 +23,26 @@
 | :---: | :---: |
 | ![总览](screenshots/dashboard.png) | ![设置](screenshots/settings.png) |
 
-> 同一面板也会渲染在对话流最新的 `cordis_run` 卡片里，需要第三张截图时重新运行一次插件即可截取。
-
 ## 安装
 
 本插件以 DSH **动态 Cordis 插件**（Dynamic Cordis Plugin）形态运行，无需编译。
+
+### 方式一：复制提示词一键安装（推荐）
+
+在 DSH 会话中直接粘贴下面这段提示词，DSH 代理会读取本仓库源码并自动完成定义与激活：
+
+````text
+请帮我安装 DeepSeek 用量监控插件（DSH 动态 Cordis 插件）：
+1. 获取源码：git clone https://github.com/xiaohai-ouyang/deepseek-usage-monitor（或直接读取仓库中的 plugin-host.js 与 plugin-client.js）
+2. 调用 cordis_define：
+   - plugin.kind = "new"，idPrefix = "dsmon"，name = "DeepSeek 用量监控"
+   - code.host：粘贴 plugin-host.js 中从 return { 开始的整个函数体
+   - code.client：粘贴 plugin-client.js 中从 return { 开始的整个函数体
+3. 调用 cordis_run 激活返回的 pluginId / packageId（首次运行 Client 代码需在页面审批卡上允许）
+4. 激活成功后提醒用户：打开 设置 → 「DeepSeek 用量监控」，配置 API Key（platform.deepseek.com → API Keys，形如 sk-...）与用量 Token（登录 platform.deepseek.com 后在浏览器控制台执行 JSON.parse(localStorage.userToken).value 获取）
+````
+
+### 方式二：手动粘贴函数体
 
 1. 打开 DSH 会话，调用 `cordis_define` 工具：
    - `plugin.kind`：`new`，`idPrefix` 可填 `dsmon`

@@ -44,8 +44,6 @@ A dynamic [Cordis](https://cordis.js.org) plugin for the [DeepSeek Harness (DSH)
 | :---: | :---: |
 | ![Dashboard](screenshots/dashboard.png) | ![Settings](screenshots/settings.png) |
 
-> The same panel also renders inside the latest `cordis_run` card in a conversation — re-run the plugin to capture one if you want a third shot.
-
 ## Requirements
 
 - A DSH instance with dynamic Cordis plugins enabled
@@ -55,6 +53,25 @@ A dynamic [Cordis](https://cordis.js.org) plugin for the [DeepSeek Harness (DSH)
 ## Installation
 
 This plugin is a **dynamic Cordis plugin**: it is defined at runtime with the `cordis_define` tool, no compilation or file installation required.
+
+### Option 1: one-prompt install (recommended)
+
+Paste the prompt below into a DSH conversation. The DSH agent reads the plugin sources from this repo, defines the plugin, and activates it for you:
+
+````text
+Please install the DeepSeek Usage Monitor plugin (a DSH dynamic Cordis plugin):
+1. Get the source: run "git clone https://github.com/xiaohai-ouyang/deepseek-usage-monitor" (or read plugin-host.js and plugin-client.js from the repo directly).
+2. Call cordis_define:
+   - plugin.kind = "new", idPrefix = "dsmon", name = "DeepSeek 用量监控"
+   - code.host: paste the whole function body starting at "return {" from plugin-host.js
+   - code.client: paste the whole function body starting at "return {" from plugin-client.js
+3. Call cordis_run with the returned pluginId / packageId (approve the Client package on its first run).
+4. After activation, tell the user to open Settings → "DeepSeek 用量监控" and configure:
+   - API Key from platform.deepseek.com → API Keys (sk-...) for balance queries
+   - Usage token: run JSON.parse(localStorage.userToken).value in the browser console of a logged-in platform.deepseek.com session
+````
+
+### Option 2: paste the function bodies manually
 
 1. In a DSH conversation, call `cordis_define`:
    - `plugin.kind`: `"new"`, `idPrefix`: e.g. `"dsmon"`
