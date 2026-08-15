@@ -1,168 +1,91 @@
-# DeepSeek Usage Monitor (DSH Plugin)
+# DeepSeek Usage Monitor（简体中文）
 
-A dynamic [Cordis](https://cordis.js.org) plugin for the [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/DeepSeek-Harness) that brings your DeepSeek API **account balance, monthly spend, per-model token usage, and a 7-day usage trend chart** right into the DSH settings panel — no extra app, no build step.
+一个运行在 **DeepSeek Harness (DSH)** 里的动态 Cordis 插件：在侧边栏设置面板中查看 DeepSeek API **账户余额、本月消费、模型 Token 用量与最近 7 天趋势**，无需额外安装应用、无需编译。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Platform: DeepSeek Harness](https://img.shields.io/badge/Platform-DSH-4d6bfe)](https://github.com/deepseek-ai/DeepSeek-Harness)
-[![Docs: 简体中文](https://img.shields.io/badge/Docs-简体中文-e03131)](README.zh-CN.md)
+[![README: English](https://img.shields.io/badge/README-English-2f81f7)](README.en.md)
 
-> Functionality is inspired by [JayHome137/DeepSeekMonitorWindows](https://github.com/JayHome137/DeepSeekMonitorWindows) (MIT License). Thanks to the original authors. **This is not an official DeepSeek product.**
+本项目功能参考 [JayHome137/DeepSeekMonitorWindows](https://github.com/JayHome137/DeepSeekMonitorWindows)（MIT License）实现，感谢原作者的开源工作。本项目不是 DeepSeek 官方产品。
 
----
+## 功能
 
-## Table of Contents
+- 查询 DeepSeek API 账户余额（官方余额接口 `api.deepseek.com/user/balance`，需要 API Key）
+- 查询平台用量数据（网页登录 Token）：本月消费、V4 Flash / V4 Pro 模型 Token 总量、请求数、缓存命中、缓存未命中、输出 Token
+- 最近 7 天 Token 趋势堆叠柱状图（自动跨月合并数据）
+- 自动刷新（1 / 5 / 30 / 60 分钟可调）
+- 凭据保存 / 清除；用量 Token 保存时自动调平台接口验证有效性
+- 双入口：设置面板固定页 + 对话流中的 `cordis_run` 卡片面板
+- UI 全部使用 DSH 主题变量（`--dsw-alias-*`），自动适配明暗主题
 
-- [Features](#features)
-- [Screenshots](#screenshots)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Configuring Credentials](#configuring-credentials)
-- [Data Storage & Security](#data-storage--security)
-- [How It Works](#how-it-works)
-- [RPC Reference](#rpc-reference)
-- [Repository Layout](#repository-layout)
-- [FAQ](#faq)
-- [Disclaimer](#disclaimer)
-- [Credits](#credits)
-- [License](#license)
+## 截图
 
-## Features
-
-| Area | Details |
-| --- | --- |
-| 💰 **Balance** | Total / granted / topped-up balance from the official `GET https://api.deepseek.com/user/balance` endpoint (requires an API Key) |
-| 📊 **Platform usage** | Monthly cost, V4 Flash & V4 Pro total tokens, request count, cache-hit / cache-miss / output tokens — pulled from the web-console usage APIs (requires the web login token) |
-| 📈 **Trend chart** | Stacked 7-day token trend (Flash vs. Pro) as a lightweight, dependency-free bar chart; automatically merges the previous month when the window crosses a month boundary |
-| 🔄 **Auto refresh** | Optional background refresh at 1 / 5 / 30 / 60 minute intervals |
-| 🔐 **Credentials** | Save / clear API Key and usage token; the usage token is validated against the platform API on save |
-| 🚪 **Two entry points** | A permanent page in the DSH settings panel **and** the same panel embedded in the latest `cordis_run` card in the conversation |
-| 🎨 **Theme aware** | All colors use DSH theme tokens (`--dsw-alias-*`), so light / dark mode just works |
-
-## Screenshots
-
-| Dashboard (总览) | Settings (设置) |
+| 总览 | 设置 |
 | :---: | :---: |
-| ![Dashboard](screenshots/dashboard.png) | ![Settings](screenshots/settings.png) |
+| ![总览](screenshots/dashboard.png) | ![设置](screenshots/settings.png) |
 
-> The same panel also renders inside the latest `cordis_run` card in a conversation — re-run the plugin to capture one if you want a third shot.
+> 同一面板也会渲染在对话流最新的 `cordis_run` 卡片里，需要第三张截图时重新运行一次插件即可截取。
 
-## Requirements
+## 安装
 
-- A DSH instance with dynamic Cordis plugins enabled
-- `curl` available on the Host machine's `PATH` (ships with Windows 10+; on Linux/macOS it is usually preinstalled)
-- A DeepSeek API Key (for balance) and a platform web-login token (for usage) — see [Configuring Credentials](#configuring-credentials)
+本插件以 DSH **动态 Cordis 插件**（Dynamic Cordis Plugin）形态运行，无需编译。
 
-## Installation
+1. 打开 DSH 会话，调用 `cordis_define` 工具：
+   - `plugin.kind`：`new`，`idPrefix` 可填 `dsmon`
+   - `code.host`：粘贴 [`plugin-host.js`](./plugin-host.js) 中 `return {` 起的整个函数体
+   - `code.client`：粘贴 [`plugin-client.js`](./plugin-client.js) 中 `return {` 起的整个函数体
+2. 调用 `cordis_run` 激活返回的 `pluginId` / `packageId`（Client 代码首次运行需要你在页面上授权）
+3. 打开侧边栏 **设置 → 「DeepSeek 用量监控」**，即可看到面板
 
-This plugin is a **dynamic Cordis plugin**: it is defined at runtime with the `cordis_define` tool, no compilation or file installation required.
+更新与回滚：向同一 `pluginId` 追加新 Package 后 `cordis_run` 用 `update` 模式切换版本；用 `run` 模式 + 旧 `packageId` 回滚。
 
-1. In a DSH conversation, call `cordis_define`:
-   - `plugin.kind`: `"new"`, `idPrefix`: e.g. `"dsmon"`
-   - `code.host`: paste the whole function body (starting at `return {`) from [`plugin-host.js`](plugin-host.js)
-   - `code.client`: paste the whole function body from [`plugin-client.js`](plugin-client.js)
-2. Call `cordis_run` with the returned `pluginId` / `packageId`.
-3. The first run of a Client package needs your approval — allow it in the run card that appears in the conversation.
-4. Open **Settings → “DeepSeek 用量监控”** in the DSH sidebar and configure your credentials.
+## 配置凭据
 
-Updates follow the same flow: append a new Package to the same `pluginId` and `cordis_run` it with `mode: "update"`. Roll back with `mode: "run"` and the previous `packageId`.
+在面板的「设置」页签填写两项凭据：
 
-## Configuring Credentials
+- **API Key**（查询余额）：来自 [platform.deepseek.com](https://platform.deepseek.com) → API Keys 页面，形如 `sk-...`。保存后自动验证并拉取余额。
+- **用量 Token**（查询用量）：DeepSeek 官方未提供用量 API，需要网页登录 Token。在已登录 `platform.deepseek.com` 的浏览器控制台执行：
 
-Two separate credentials are used, because DeepSeek offers no official usage API:
+  ```js
+  JSON.parse(localStorage.userToken).value
+  ```
 
-**1. API Key — balance queries**
-From [platform.deepseek.com](https://platform.deepseek.com) → **API Keys**, e.g. `sk-…`. Paste it on the Settings tab and hit **保存** (Save). The plugin immediately verifies it and fetches your balance.
+  将结果粘贴保存，插件会自动调平台接口验证。**Token 可能过期**，用量查询报 401 时重新获取即可。
 
-**2. Usage token — usage statistics**
-Log in to [platform.deepseek.com](https://platform.deepseek.com) in a browser, open the developer console and run:
+## 数据存储与安全
 
-```js
-JSON.parse(localStorage.userToken).value
-```
-
-Paste the returned string and hit **保存并验证** (Save & verify). The plugin calls the platform usage API once to confirm the token is valid.
-
-> The usage token is a web session credential and **can expire**. If usage queries return `401`, repeat the step above.
-
-## Data Storage & Security
-
-Credentials are stored in **plain text** in the DSH workspace root:
+凭据以明文保存在当前 DSH 工作区根目录的 `.deepseek-monitor.config.json`：
 
 ```text
-<workspace>/.deepseek-monitor.config.json
+<工作区>/.deepseek-monitor.config.json
 ```
 
-- Never commit, share, or screenshot this file.
-- The API Key and the usage token are sensitive credentials; you are responsible for the risks of local storage, account security, and the network requests this plugin makes.
-- The token is passed to `curl` as an `Authorization` header argument, so it can briefly appear in the local process list during a request. Do not run this plugin on a machine where you cannot trust other local users.
+**请勿外传、勿截图公开该文件内容。** API Key 与用量 Token 属于敏感凭据，使用者需自行承担本机存储、账号安全与网络请求带来的风险。请求期间 Token 会作为 curl 的请求头参数短暂出现在本机进程列表中，请勿在不可信共享机器上使用。
 
-## How It Works
+## 工作原理
 
-### Host half (`plugin-host.js`)
+- Host 半（Node 进程内）通过 `subprocess` 服务调用系统自带 `curl.exe` 完成带 Bearer 认证的请求（DSH 的 `web.fetch` 接口不支持自定义请求头）
+- 用量接口与参考项目一致：
+  - `https://platform.deepseek.com/api/v0/usage/amount?month=<M>&year=<Y>`
+  - `https://platform.deepseek.com/api/v0/usage/cost?month=<M>&year=<Y>`
+- Client 半通过 `harness.handle` / `host.call` 与 Host 通信，UI 注册在 `settings.section` 与 `tool.view.cordis` 两个槽位；自动刷新使用 `timer` 服务，随插件生命周期自动清理
 
-Runs inside the DSH Node.js process:
-
-- DSH's `web.fetch` service cannot send custom headers, so authenticated requests are executed by spawning the system `curl.exe` through the `subprocess` service (collect-mode stdio, bounded output, `--max-time` per request).
-- Endpoints:
-  - Balance: `GET https://api.deepseek.com/user/balance` (Bearer API Key)
-  - Usage: `GET https://platform.deepseek.com/api/v0/usage/amount?month=<M>&year=<Y>` and `GET https://platform.deepseek.com/api/v0/usage/cost?month=<M>&year=<Y>` (Bearer web token, `x-app-version: 1.0.0`)
-- Token kinds are aggregated exactly like the reference project: `REQUEST`, `PROMPT_CACHE_HIT_TOKEN`, `PROMPT_CACHE_MISS_TOKEN`, `RESPONSE_TOKEN`, `PROMPT_TOKEN`.
-- Config persistence uses the `fs` service; the latest balance / usage snapshots are cached in memory so the UI can repaint instantly.
-- Client RPC is exposed through `harness.handle` (package-private, JSON-only).
-
-### Client half (`plugin-client.js`)
-
-- Registers the panel in two slots: `settings.section` (permanent settings page, id `deepseek-monitor`) and `tool.view.cordis` (key `self`, rendered in the latest `cordis_run` card).
-- Pure `React.createElement` (no JSX/TypeScript), styled with a package-scoped stylesheet built on DSH theme variables.
-- Talks to the Host via `host.call`; the auto-refresh loop uses the `timer` service and disposes cleanly with the plugin fiber.
-
-## RPC Reference
-
-Methods exposed by the Host half (`harness.handle`):
-
-| Method | Args | Returns |
-| --- | --- | --- |
-| `get-state` | — | Masked config summary, cached balance/usage, update timestamp |
-| `save-config` | `{ apiKey?, usageToken?, refreshIntervalSeconds?, autoRefreshEnabled? }` | `{ ok, tokenValid?, tokenError? }` — validates a newly saved usage token |
-| `clear-credentials` | `{ field: 'apiKey' \| 'usageToken' }` | `{ ok }` |
-| `fetch-balance` | — | `{ ok, data? \| error? }` |
-| `fetch-usage` | — | `{ ok, data? \| error? }` (current month + previous month when the 7-day window crosses over) |
-| `refresh-all` | — | `{ balance, usage, lastUpdatedAt }` |
-
-## Repository Layout
+## 文件结构
 
 ```text
 deepseek-usage-monitor/
-├── plugin-host.js     # code.host — data fetching, credential persistence, RPC
-├── plugin-client.js   # code.client — panel UI, auto refresh
-├── screenshots/       # README images (placeholders; replace with real shots)
-├── README.md          # this file
-├── README.zh-CN.md    # 简体中文说明
+├── plugin-host.js     # cordis_define 的 code.host（余额/用量抓取、凭据持久化、RPC）
+├── plugin-client.js   # cordis_define 的 code.client（面板 UI、自动刷新）
+├── screenshots/       # README 截图
+├── README.md          # 本文件（默认中文说明）
+├── README.en.md       # English version
 ├── LICENSE            # MIT
-└── package.json       # repo metadata
+└── package.json
 ```
 
-## FAQ
+## 免责声明
 
-**Why curl instead of fetch?** — DSH's `web.fetch` request shape only carries a URL; it cannot attach `Authorization` headers. The Host's `subprocess` service lets the plugin reuse the OS-installed `curl` with full header control.
-
-**Why do I need a web token at all?** — DeepSeek does not publish a usage API. The web console fetches usage from internal endpoints that authenticate with the browser session token captured via `localStorage.userToken`.
-
-**The usage query returns 401.** — Your usage token expired. Grab a fresh one from the browser console (see above) and save it again.
-
-**Where is my data?** — Only locally, in the workspace config file described above. The plugin never uploads anything anywhere else.
-
-**Will this survive a DSH restart?** — Dynamic plugins are process-local: after a restart, re-define and re-run the plugin (credentials in the config file survive).
-
-## Disclaimer
-
-For learning and personal usage monitoring only. Please respect DeepSeek's Terms of Use, keep request frequency reasonable, and be aware that the platform's page structure, login flow, and internal endpoints may change at any time — long-term availability is not guaranteed.
-
-## Credits
-
-- [JayHome137/DeepSeekMonitorWindows](https://github.com/JayHome137/DeepSeekMonitorWindows) — Windows desktop monitor whose endpoints and token aggregation this plugin follows (MIT)
-- [DeepSeek Harness](https://github.com/deepseek-ai/DeepSeek-Harness) — the host platform for dynamic Cordis plugins
+本项目仅用于学习和个人用量监控。请遵守 DeepSeek 的使用条款，合理使用相关接口，避免频繁请求。DeepSeek 平台页面结构、登录状态与内部用量接口都可能变化，本项目不保证长期可用。
 
 ## License
 
-[MIT](LICENSE) © 2026 Xiao Hi
+[MIT](./LICENSE)
