@@ -40,11 +40,11 @@ A dynamic [Cordis](https://cordis.js.org) plugin for the [DeepSeek Harness (DSH)
 
 ## Screenshots
 
-| Dashboard (总览) | Settings (设置) | Run card |
-| :---: | :---: | :---: |
-| ![Dashboard](screenshots/dashboard.png) | ![Settings](screenshots/settings.png) | ![Run card](screenshots/run-card.png) |
+| Dashboard (总览) | Settings (设置) |
+| :---: | :---: |
+| ![Dashboard](screenshots/dashboard.png) | ![Settings](screenshots/settings.png) |
 
-> The images above are placeholders. Replace them with real screenshots of your DSH panel.
+> The same panel also renders inside the latest `cordis_run` card in a conversation — re-run the plugin to capture one if you want a third shot.
 
 ## Requirements
 

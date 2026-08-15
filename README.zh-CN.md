@@ -19,11 +19,11 @@
 
 ## 截图
 
-| 总览 | 设置 | Run 卡片 |
-| :---: | :---: | :---: |
-| ![总览](screenshots/dashboard.png) | ![设置](screenshots/settings.png) | ![Run 卡片](screenshots/run-card.png) |
+| 总览 | 设置 |
+| :---: | :---: |
+| ![总览](screenshots/dashboard.png) | ![设置](screenshots/settings.png) |
 
-> 目前为占位图，请替换为 DSH 面板的真实截图。
+> 同一面板也会渲染在对话流最新的 `cordis_run` 卡片里，需要第三张截图时重新运行一次插件即可截取。
 
 ## 安装
 
