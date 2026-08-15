@@ -23,14 +23,15 @@ return {
 .dsm-title { font-size: 15px; font-weight: 650; letter-spacing: 0.2px; }
 .dsm-header-actions { display: flex; align-items: center; gap: 8px; }
 .dsm-updated { font-size: 11px; color: var(--dsw-alias-label-secondary, #8a94a3); }
-.dsm-btn { border: 1px solid var(--dsw-alias-border-l1, rgba(127,137,150,.35)); background: var(--dsw-alias-bg-layer-2, rgba(255,255,255,.05)); color: inherit; border-radius: 8px; padding: 5px 12px; font-size: 12.5px; cursor: pointer; }
-.dsm-btn:hover:not(:disabled) { border-color: var(--dsw-alias-brand-primary, #4d6bfe); color: var(--dsw-alias-brand-primary, #4d6bfe); }
+.dsm-btn { font: inherit; border: 1px solid var(--dsw-alias-border-l1, rgba(127,137,150,.35)); background: var(--dsw-alias-button-elevated-fill, var(--dsw-alias-bg-layer-2, rgba(255,255,255,.05))); color: var(--dsw-alias-label-primary, inherit); border-radius: 8px; padding: 5px 12px; font-size: 12.5px; cursor: pointer; }
+.dsm-btn:hover:not(:disabled) { background: var(--dsw-alias-interactive-bg-hover, rgba(127,137,150,.14)); border-color: var(--dsw-alias-brand-primary, #4d6bfe); color: var(--dsw-alias-brand-primary, #4d6bfe); }
 .dsm-btn:disabled { opacity: .5; cursor: default; }
-.dsm-btn-primary { background: var(--dsw-alias-brand-primary, #4d6bfe); border-color: transparent; color: #fff; }
-.dsm-btn-primary:hover:not(:disabled) { color: #fff; }
+.dsm-btn-primary { background: var(--dsw-alias-button-primary-fill, var(--dsw-alias-brand-primary, #4d6bfe)); border-color: transparent; color: var(--dsw-alias-label-primary-foreground, #fff); }
+.dsm-btn-primary:hover:not(:disabled) { background: var(--dsw-alias-button-primary-hover, var(--dsw-alias-button-primary-fill, #4d6bfe)); color: var(--dsw-alias-label-primary-foreground, #fff); }
 .dsm-btn-ghost { background: transparent; }
+.dsm-btn-ghost:hover:not(:disabled) { background: var(--dsw-alias-button-ghost-active-hover, rgba(127,137,150,.14)); }
 .dsm-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--dsw-alias-border-l1, rgba(127,137,150,.25)); }
-.dsm-tab { background: none; border: none; color: var(--dsw-alias-label-secondary, #8a94a3); font-size: 13px; padding: 6px 12px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.dsm-tab { font: inherit; background: none; border: none; color: var(--dsw-alias-label-secondary, #8a94a3); font-size: 13px; padding: 6px 12px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
 .dsm-tab-active { color: var(--dsw-alias-brand-primary, #4d6bfe); border-bottom-color: var(--dsw-alias-brand-primary, #4d6bfe); }
 .dsm-card { background: var(--dsw-alias-bg-layer-1, rgba(255,255,255,.03)); border: 1px solid var(--dsw-alias-border-l1, rgba(127,137,150,.22)); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
 .dsm-card-title { font-size: 12px; color: var(--dsw-alias-label-secondary, #8a94a3); font-weight: 600; }
@@ -57,10 +58,10 @@ return {
 .dsm-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
 .dsm-dot-flash { background: #4d6bfe; }
 .dsm-dot-pro { background: #9d7bf6; }
-.dsm-input { flex: 1; min-width: 0; background: var(--dsw-alias-bg-layer-2, rgba(255,255,255,.05)); border: 1px solid var(--dsw-alias-border-l1, rgba(127,137,150,.35)); border-radius: 8px; color: inherit; padding: 6px 10px; font-size: 12.5px; }
+.dsm-input { font: inherit; flex: 1; min-width: 0; background: var(--dsw-alias-bg-layer-2, rgba(255,255,255,.05)); border: 1px solid var(--dsw-alias-border-l1, rgba(127,137,150,.35)); border-radius: 8px; color: inherit; padding: 6px 10px; font-size: 12.5px; }
 .dsm-field { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.dsm-check { display: flex; align-items: center; gap: 6px; font-size: 12.5px; cursor: pointer; }
-.dsm-select { background: var(--dsw-alias-bg-layer-2, rgba(255,255,255,.05)); border: 1px solid var(--dsw-alias-border-l1, rgba(127,137,150,.35)); border-radius: 8px; color: inherit; padding: 5px 8px; font-size: 12.5px; }
+.dsm-check { font: inherit; display: flex; align-items: center; gap: 6px; font-size: 12.5px; cursor: pointer; }
+.dsm-select { font: inherit; background: var(--dsw-alias-bg-layer-2, rgba(255,255,255,.05)); border: 1px solid var(--dsw-alias-border-l1, rgba(127,137,150,.35)); border-radius: 8px; color: inherit; padding: 5px 8px; font-size: 12.5px; }
 .dsm-note { line-height: 1.6; }
 `)
 
