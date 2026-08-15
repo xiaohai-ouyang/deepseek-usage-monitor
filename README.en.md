@@ -62,11 +62,11 @@ Paste the prompt below into a DSH conversation. The DSH agent reads the plugin s
 Please install the DeepSeek Usage Monitor plugin (a DSH dynamic Cordis plugin):
 1. Get the source: run "git clone https://github.com/xiaohai-ouyang/deepseek-usage-monitor" (or read plugin-host.js and plugin-client.js from the repo directly).
 2. Call cordis_define:
-   - plugin.kind = "new", idPrefix = "dsmon", name = "DeepSeek 用量监控"
+   - plugin.kind = "new", idPrefix = "dsmon", name = "Usage Monitor"
    - code.host: paste the whole function body starting at "return {" from plugin-host.js
    - code.client: paste the whole function body starting at "return {" from plugin-client.js
 3. Call cordis_run with the returned pluginId / packageId (approve the Client package on its first run).
-4. After activation, tell the user to open Settings → "DeepSeek 用量监控" and configure:
+4. After activation, tell the user to open Settings → "用量监控" and configure:
    - API Key from platform.deepseek.com → API Keys (sk-...) for balance queries
    - Usage token: run JSON.parse(localStorage.userToken).value in the browser console of a logged-in platform.deepseek.com session
 ````
@@ -79,7 +79,7 @@ Please install the DeepSeek Usage Monitor plugin (a DSH dynamic Cordis plugin):
    - `code.client`: paste the whole function body from [`plugin-client.js`](plugin-client.js)
 2. Call `cordis_run` with the returned `pluginId` / `packageId`.
 3. The first run of a Client package needs your approval — allow it in the run card that appears in the conversation.
-4. Open **Settings → “DeepSeek 用量监控”** in the DSH sidebar and configure your credentials.
+4. Open **Settings → “用量监控”** in the DSH sidebar and configure your credentials.
 
 Updates follow the same flow: append a new Package to the same `pluginId` and `cordis_run` it with `mode: "update"`. Roll back with `mode: "run"` and the previous `packageId`.
 

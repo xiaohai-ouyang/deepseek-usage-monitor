@@ -32,14 +32,14 @@
 在 DSH 会话中直接粘贴下面这段提示词，DSH 代理会读取本仓库源码并自动完成定义与激活：
 
 ````text
-请帮我安装 DeepSeek 用量监控插件（DSH 动态 Cordis 插件）：
+请帮我安装用量监控插件（DSH 动态 Cordis 插件）：
 1. 获取源码：git clone https://github.com/xiaohai-ouyang/deepseek-usage-monitor（或直接读取仓库中的 plugin-host.js 与 plugin-client.js）
 2. 调用 cordis_define：
-   - plugin.kind = "new"，idPrefix = "dsmon"，name = "DeepSeek 用量监控"
+   - plugin.kind = "new"，idPrefix = "dsmon"，name = "用量监控"
    - code.host：粘贴 plugin-host.js 中从 return { 开始的整个函数体
    - code.client：粘贴 plugin-client.js 中从 return { 开始的整个函数体
 3. 调用 cordis_run 激活返回的 pluginId / packageId（首次运行 Client 代码需在页面审批卡上允许）
-4. 激活成功后提醒用户：打开 设置 → 「DeepSeek 用量监控」，配置 API Key（platform.deepseek.com → API Keys，形如 sk-...）与用量 Token（登录 platform.deepseek.com 后在浏览器控制台执行 JSON.parse(localStorage.userToken).value 获取）
+4. 激活成功后提醒用户：打开 设置 → 「用量监控」，配置 API Key（platform.deepseek.com → API Keys，形如 sk-...）与用量 Token（登录 platform.deepseek.com 后在浏览器控制台执行 JSON.parse(localStorage.userToken).value 获取）
 ````
 
 ### 方式二：手动粘贴函数体
@@ -49,7 +49,7 @@
    - `code.host`：粘贴 [`plugin-host.js`](./plugin-host.js) 中 `return {` 起的整个函数体
    - `code.client`：粘贴 [`plugin-client.js`](./plugin-client.js) 中 `return {` 起的整个函数体
 2. 调用 `cordis_run` 激活返回的 `pluginId` / `packageId`（Client 代码首次运行需要你在页面上授权）
-3. 打开侧边栏 **设置 → 「DeepSeek 用量监控」**，即可看到面板
+3. 打开侧边栏 **设置 → 「用量监控」**，即可看到面板
 
 更新与回滚：向同一 `pluginId` 追加新 Package 后 `cordis_run` 用 `update` 模式切换版本；用 `run` 模式 + 旧 `packageId` 回滚。
 

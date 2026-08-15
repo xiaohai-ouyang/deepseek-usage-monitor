@@ -5,7 +5,7 @@
  * 无 JSX/TypeScript，UI 全部使用 React.createElement）。
  *
  * 注册位置：
- *  - settings.section「DeepSeek 用量监控」：设置面板固定入口（总览/设置 双页签）
+ *  - settings.section「用量监控」：设置面板固定入口（总览/设置 双页签）
  *  - tool.view.cordis（key: self）：cordis_run 卡片内的同款面板
  *
  * 依赖：host.call 与 Host 半的 RPC 通信；timer 服务做自动刷新；
@@ -349,7 +349,7 @@ return {
 
       return React.createElement('div', { className: 'dsm-root' },
         React.createElement('div', { className: 'dsm-header' },
-          React.createElement('span', { className: 'dsm-title' }, 'DeepSeek 用量监控'),
+          React.createElement('span', { className: 'dsm-title' }, '用量监控'),
           React.createElement('div', { className: 'dsm-header-actions' },
             updatedAt ? React.createElement('span', { className: 'dsm-updated' }, '更新于 ' + new Date(updatedAt).toLocaleTimeString()) : null,
             React.createElement('button', { className: 'dsm-btn', disabled: busy, onClick: () => { void loadAll() } }, busy ? '刷新中…' : '刷新'),
@@ -369,7 +369,7 @@ return {
     ))
 
     slots.inject('settings.section', () => slots.register(
-      { name: 'settings.section', id: 'deepseek-monitor', order: 25, label: 'DeepSeek 用量监控' },
+      { name: 'settings.section', id: 'deepseek-monitor', order: 25, label: '用量监控' },
       () => React.createElement(Panel, null),
     ))
   },
