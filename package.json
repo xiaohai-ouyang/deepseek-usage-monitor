@@ -1,0 +1,19 @@
+{
+  "name": "deepseek-usage-monitor",
+  "version": "1.0.0",
+  "description": "DSH 动态 Cordis 插件：DeepSeek API 余额与平台用量监控（余额、本月消费、V4 Flash/Pro Token 明细、7 天趋势）",
+  "license": "MIT",
+  "keywords": [
+    "deepseek",
+    "usage",
+    "monitor",
+    "dsh",
+    "cordis",
+    "plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiaohai-ouyang/deepseek-usage-monitor.git"
+  },
+  "private": false
+}

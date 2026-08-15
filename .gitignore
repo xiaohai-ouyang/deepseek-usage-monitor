@@ -1,0 +1,10 @@
+# 凭据文件：严禁提交
+.deepseek-monitor.config.json
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+node_modules/
